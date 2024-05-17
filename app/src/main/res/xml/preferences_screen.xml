@@ -6,15 +6,15 @@
         android:title="@string/reproduir_musica" />
     <ListPreference
         android:defaultValue="1"
-        android:entries="@android:array/emailAddressTypes"
-        android:entryValues="@android:array/emailAddressTypes"
-        android:key="list_preference_1"
         android:dialogTitle="Ninjas"
-        android:title="List preference" />
+        android:entries="@array/pais"
+        android:entryValues="@android:array/emailAddressTypes"
+        android:key="ninjaList"
+        android:title="Ninja" />
     <EditTextPreference
         android:defaultValue="Default value"
-        android:key="edit_text_preference_1"
+        android:key="numObjetivos"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Edit text preference" />
+        android:title="Nombre de enemics" />
 </PreferenceScreen>

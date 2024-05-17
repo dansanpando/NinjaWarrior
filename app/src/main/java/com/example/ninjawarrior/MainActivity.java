@@ -3,6 +3,7 @@ package com.example.ninjawarrior;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,10 +26,17 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private Button btJugar, btPuntuacio, btSalir;
+
     private Toolbar menu;
+
+    private String nickname;
 
     private MediaPlayer backgroundMusic;
     private SharedPreferences sharedPreferences;
+
+    private static SharedPreferences pref;
+
+
 
     public static ArrayList<String> listNamePrueba = new ArrayList<>();
 
@@ -38,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
         lisenerButton();
+        BackgroundMusic();
     }
 
     private void init(){
@@ -48,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(menu);
         backgroundMusic = MediaPlayer.create(MainActivity.this,R.raw.soundtuck);
         sharedPreferences = getSharedPreferences("ninja_warrior_preference", Context.MODE_PRIVATE);
-        BackgroundMusic();
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
@@ -65,8 +74,7 @@ public class MainActivity extends AppCompatActivity {
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String nickname = input.getText().toString();
-                guardarNickname(nickname);
+                nickname = input.getText().toString();
             }
         });
         alert.show();
@@ -90,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void BackgroundMusic() {
+
         if (backgroundMusic.isPlaying()) {
             backgroundMusic.stop();
             try {
@@ -106,11 +115,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void guardarNickname(String nickname){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(nickname, 0);
-        editor.commit();
-    }
+
 
     private ArrayList<String> recogerNickname(){
         ArrayList<String> listNickname = new ArrayList<>();
@@ -130,8 +135,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startGame(){
-        //getNamePlayer();
-        startActivity(new Intent(this, JocActivity.class));
+        getNamePlayer();
+        Intent i = new Intent(this, JocActivity.class);
+        i.putExtra("nickname", nickname);
+        startActivity(i);
+
+    }
+
+    public static String getPrefNinja(){
+        return pref.getString("ninjaList","");
+    }
+
+    public static String getPrefNumObjetivos(){
+       return pref.getString("numObjetivos","");
+    }
+
+    public static boolean getPrefMusic(){
+       return pref.getBoolean("cbMusic",true);
     }
 
 }

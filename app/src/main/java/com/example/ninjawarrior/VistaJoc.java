@@ -2,8 +2,10 @@ package com.example.ninjawarrior;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -16,13 +18,11 @@ import java.util.Vector;
 
 public class VistaJoc extends View {
 
-    private Grafics ninja;// Gràfic del ninja
-
+    private Grafics ninja;
     private Drawable drawableObjectiu[] = new Drawable[8];
-
     private Grafics ganivet;
     private static int INC_VELOCITAT_GANIVET = 12;
-    private boolean ganivetActiu =false;
+    private boolean ganivetActiu = false;
     private int tempsGanivet;
     private Integer numObjectius = 2;
     private Drawable drawableNinja, drawableGanivet, drawableEnemic;
@@ -32,12 +32,18 @@ public class VistaJoc extends View {
     private static final int INC_GIR = 5;
     private static final float INC_ACCELERACIO = 0.5f;
 
+    private Integer contador = 0;
+
     private ThreadJoc thread = new ThreadJoc();
     //Cada quant temps volem processar canvis (ms)
     private static int PERIODE_PROCES = 50;
     // Quan es va realitzar l'últim procés
     private long ultimProces = 0;
     private Vector<Grafics> objectius = new Vector<Grafics>();
+
+    private Bundle bundle;
+
+    private SharedPreferences sharedPreferences;
 
     public VistaJoc(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -46,8 +52,9 @@ public class VistaJoc extends View {
         // Obtenim referència al recurs ninja_enemic guardat en carpeta Res
         drawableEnemic = context.getResources().
                 getDrawable(R.drawable.ninja_enemic, null);
-        ninja = new Grafics(this, drawableNinja);
         drawableGanivet = context.getResources().getDrawable(R.drawable.ganivet,null);
+
+        ninja = new Grafics(this, drawableNinja);
         ganivet = new Grafics(this, drawableGanivet);
 
         for (int i = 0; i < numObjectius; i++){
@@ -64,6 +71,8 @@ public class VistaJoc extends View {
                 getDrawable(R.drawable.cos_ninja, null); //cos
         drawableObjectiu[2] = context.getResources().
                 getDrawable(R.drawable.cua_ninja, null);
+        sharedPreferences = context.getSharedPreferences("ninja_warrior_preference", Context.MODE_PRIVATE);
+
     }
 
 
@@ -237,7 +246,8 @@ public class VistaJoc extends View {
 
     private void destrueixObjectiu(int i) {
         objectius.remove(i);
-        ganivetActiu =false;
+        contador++;
+        ganivetActiu = false;
         int numParts = 3;
         if(objectius.get(i).getDrawable()== drawableEnemic){
             for(int n = 0; n < numParts; n++){
@@ -265,14 +275,16 @@ public class VistaJoc extends View {
         ganivetActiu = true;
     }
 
+
+
     public void gameOver(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Nombre jugador");
-        alert.setMessage("Por favor introduzca su nombre");
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-            }
-        });
-        alert.show();
+        String nickname = bundle.getString("nickname");
+
+    }
+
+    private void guardarNickname(String nickname){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(nickname, 0);
+        editor.commit();
     }
 }
