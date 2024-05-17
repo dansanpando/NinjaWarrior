@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">NinjaWarrior</string>
+    <string name="jugar">Jugar</string>
+    <string name="puntuacio">Puntuacio</string>
+    <string name="salir">Salir</string>
+    <string name="reproduir_musica">Reproducir Musica</string>
+</resources>
