@@ -6,8 +6,8 @@
         <item>Ninja 3</item>
     </string-array>
     <string-array name="ninja_value">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
+        <item>@drawable/ninja01</item>
+        <item>@drawable/ninja02</item>
+        <item>@drawable/ninja03</item>
     </string-array>
 </resources>

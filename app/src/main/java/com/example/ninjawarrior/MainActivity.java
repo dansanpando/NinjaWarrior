@@ -10,12 +10,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -36,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
         lisenerButton();
-        music.playMusic(this, music.backgroundMain());
+        if(MainActivity.getPrefMusic()){
+            music.playMusic(this, music.backgroundMain());
+        }
     }
 
     private void init() {
@@ -123,20 +128,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static String getPrefNumObjetivos() {
-        if (pref != null) {
-            return pref.getString("numObjetivos", "3"); // Valor por defecto "0"
-        }
-        return "3"; // Valor por defecto
+        //if (pref != null) {
+            //return pref.getString("numObjetivos", "3");
+        //}
+        return "3";
     }
 
     public static boolean getPrefMusic() {
         if (pref != null) {
             return pref.getBoolean("cbMusic", true);
         }
-        return true; // Valor por defecto
+        return true;
     }
 
     public static String getNickname() {
         return nickname;
     }
+
+
 }

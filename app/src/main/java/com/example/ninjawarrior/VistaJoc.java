@@ -23,6 +23,8 @@ import java.util.Vector;
 public class VistaJoc extends View {
 
     private Grafics ninja;
+    private Context context;
+    private boolean jocTerminat = false;
     private Drawable drawableObjectiu[] = new Drawable[8];
     private Grafics ganivet;
     private static int INC_VELOCITAT_GANIVET = 12;
@@ -56,21 +58,25 @@ public class VistaJoc extends View {
     private float mX=0, mY=0;
     private boolean llancament = false;
 
+    private String tipusNinja = MainActivity.getPrefNinja();
+
     public VistaJoc(Context context, AttributeSet attrs) {
         super(context, attrs);
-        numObjectius = Integer.valueOf(MainActivity.getPrefNumObjetivos());
+        this.context = context;
+        numObjectius = Integer.parseInt(MainActivity.getPrefNumObjetivos());
         music = Music.getInstance();
-        music.playMusic(context,music.backgroundGame());
+        if (MainActivity.getPrefMusic()){
+            music.playMusic(context,music.backgroundGame());
+        }
         sharedPreferences = context.getSharedPreferences("ninja_warrior_preference", Context.MODE_PRIVATE);
 
-        //if(Integer.parseInt(MainActivity.getPrefNinja()) == 2){
-            //drawableNinja = context.getResources().getDrawable(R.drawable.ninja03, null);
-        //} else if (Integer.parseInt(MainActivity.getPrefNinja()) == 1){
-            //drawableNinja = context.getResources().
-              //      getDrawable(R.drawable.ninja02, null);
-        //} else {
+        if(tipusNinja.equals("res/drawable/ninja01.png")){
             drawableNinja = context.getResources().getDrawable(R.drawable.ninja01, null);
-        //}
+        } else if (tipusNinja.equals("res/drawable/ninja02.png")){
+            drawableNinja = context.getResources().getDrawable(R.drawable.ninja02, null);
+        } else if (tipusNinja.equals("res/drawable/ninja03.png")){
+            drawableNinja = context.getResources().getDrawable(R.drawable.ninja03, null);
+        }
 
         drawableEnemic = context.getResources().
                 getDrawable(R.drawable.ninja_enemic, null);
@@ -171,7 +177,7 @@ public class VistaJoc extends View {
     class ThreadJoc extends Thread {
         @Override
         public void run() {
-            while (true) {
+            while (!jocTerminat) {
                 actualitzaMoviment();
             }
         }
@@ -201,8 +207,12 @@ public class VistaJoc extends View {
             case MotionEvent.ACTION_UP:
                 girNinja = 0;
                 acceleracioNinja = 0;
-                if (llancament){
-                    disparaGanivet();
+                if (!jocTerminat) {
+                    if (llancament) {
+                        disparaGanivet();
+                    }
+                } else {
+                    JocActivity.dialegFinal();
                 }
                 break;
         }
@@ -280,9 +290,13 @@ public class VistaJoc extends View {
         }
         objectius.remove(i);
         contador++;
+        if(objectius.size() == 0){
+            jocTerminat = true;
+        }
         ganivetActiu = false;
     }
     private void disparaGanivet() {
+
         ganivet.setPosX(ninja.getPosX()+ ninja.getAmplada()/2-ganivet.getAmplada()/2);
         ganivet.setPosY(ninja.getPosY()+ ninja.getAltura()/2-ganivet.getAltura()/2);
         ganivet.setAngle(ninja.getAngle());
