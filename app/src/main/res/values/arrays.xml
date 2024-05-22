@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="pais">
+    <string-array name="ninja">
         <item>Ninja 1</item>
         <item>Ninja 2</item>
         <item>Ninja 3</item>
+    </string-array>
+    <string-array name="ninja_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 </resources>

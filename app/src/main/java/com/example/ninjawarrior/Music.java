@@ -14,22 +14,39 @@ public class Music {
         return instance;
     }
 
-    public void backgroundMain(Context context){
-        music = MediaPlayer.create(context,R.raw.soundtuck);
+    public Integer backgroundMain(){
+       return R.raw.soundtuck;
     }
 
-    public void backgroundGame(Context context){
-        music = MediaPlayer.create(context,R.raw.soundtuck);
+    public Integer backgroundGame(){
+       return R.raw.background_game;
     }
 
-    public void soundExplosion(Context context){
-        music = MediaPlayer.create(context,R.raw.explosio);
+    public Integer soundExplosion(){
+        return R.raw.explosio;
     }
 
-    public void soundGanivet(Context context){
-        music = MediaPlayer.create(context,R.raw.llancament);
+    public Integer soundGanivet(){
+        return R.raw.llancament;
     }
 
+    public void playMusic(Context context, int resId) {
+        // Si hay música reproduciéndose, detenerla y liberarla
+        if (music != null) {
+            if (music.isPlaying()) {
+                music.stop();
+            }
+            music.release();
+        }
+        music = MediaPlayer.create(context, resId);
+        music.start();
+    }
+
+    public void stopMusic(){
+        music.stop();
+    }
+
+    // Método para obtener el objeto MediaPlayer actual
     public MediaPlayer getMusic() {
         return music;
     }

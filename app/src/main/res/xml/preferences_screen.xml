@@ -6,8 +6,8 @@
         android:title="@string/reproduir_musica" />
     <ListPreference
         android:defaultValue="1"
-        android:entries="@array/pais"
-        android:entryValues="@array/pais"
+        android:entries="@array/ninja"
+        android:entryValues="@array/ninja_value"
         android:key="ninjaList"
         android:title="Ninja" />
     <EditTextPreference

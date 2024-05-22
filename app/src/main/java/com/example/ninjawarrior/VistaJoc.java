@@ -60,19 +60,17 @@ public class VistaJoc extends View {
         super(context, attrs);
         numObjectius = Integer.valueOf(MainActivity.getPrefNumObjetivos());
         music = Music.getInstance();
-        music.backgroundGame(context);
+        music.playMusic(context,music.backgroundGame());
         sharedPreferences = context.getSharedPreferences("ninja_warrior_preference", Context.MODE_PRIVATE);
 
-        if(Integer.parseInt(MainActivity.getPrefNinja()) == 2){
-            drawableNinja = context.getResources().
-                    getDrawable(R.drawable.ninja03, null);
-        } else if (Integer.parseInt(MainActivity.getPrefNinja()) == 1){
-            drawableNinja = context.getResources().
-                    getDrawable(R.drawable.ninja02, null);
-        } else {
-            drawableNinja = context.getResources().
-                    getDrawable(R.drawable.ninja01, null);
-        }
+        //if(Integer.parseInt(MainActivity.getPrefNinja()) == 2){
+            //drawableNinja = context.getResources().getDrawable(R.drawable.ninja03, null);
+        //} else if (Integer.parseInt(MainActivity.getPrefNinja()) == 1){
+            //drawableNinja = context.getResources().
+              //      getDrawable(R.drawable.ninja02, null);
+        //} else {
+            drawableNinja = context.getResources().getDrawable(R.drawable.ninja01, null);
+        //}
 
         drawableEnemic = context.getResources().
                 getDrawable(R.drawable.ninja_enemic, null);
