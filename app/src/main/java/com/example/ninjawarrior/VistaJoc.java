@@ -1,5 +1,6 @@
 package com.example.ninjawarrior;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -7,12 +8,15 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Vector;
 
@@ -24,7 +28,7 @@ public class VistaJoc extends View {
     private static int INC_VELOCITAT_GANIVET = 12;
     private boolean ganivetActiu = false;
     private int tempsGanivet;
-    private Integer numObjectius = 2;
+    private Integer numObjectius;
     private Drawable drawableNinja, drawableGanivet, drawableEnemic;
     private int girNinja; // Increment de direcció
     private float acceleracioNinja; // augment de velocitat
@@ -32,7 +36,7 @@ public class VistaJoc extends View {
     private static final int INC_GIR = 5;
     private static final float INC_ACCELERACIO = 0.5f;
 
-    private Integer contador = 0;
+
 
     private ThreadJoc thread = new ThreadJoc();
     //Cada quant temps volem processar canvis (ms)
@@ -45,11 +49,31 @@ public class VistaJoc extends View {
 
     private SharedPreferences sharedPreferences;
 
+    private Music music;
+
+    private Integer contador = 0;
+
+    private float mX=0, mY=0;
+    private boolean llancament = false;
+
     public VistaJoc(Context context, AttributeSet attrs) {
         super(context, attrs);
-        drawableNinja = context.getResources().
-                getDrawable(R.drawable.ninja01, null);
-        // Obtenim referència al recurs ninja_enemic guardat en carpeta Res
+        numObjectius = Integer.valueOf(MainActivity.getPrefNumObjetivos());
+        music = Music.getInstance();
+        music.backgroundGame(context);
+        sharedPreferences = context.getSharedPreferences("ninja_warrior_preference", Context.MODE_PRIVATE);
+
+        if(Integer.parseInt(MainActivity.getPrefNinja()) == 2){
+            drawableNinja = context.getResources().
+                    getDrawable(R.drawable.ninja03, null);
+        } else if (Integer.parseInt(MainActivity.getPrefNinja()) == 1){
+            drawableNinja = context.getResources().
+                    getDrawable(R.drawable.ninja02, null);
+        } else {
+            drawableNinja = context.getResources().
+                    getDrawable(R.drawable.ninja01, null);
+        }
+
         drawableEnemic = context.getResources().
                 getDrawable(R.drawable.ninja_enemic, null);
         drawableGanivet = context.getResources().getDrawable(R.drawable.ganivet,null);
@@ -65,14 +89,13 @@ public class VistaJoc extends View {
             objectiu.setRotacio((int) (Math.random() * 8 - 4));
             objectius.add(objectiu);
         }
+
         drawableObjectiu[0] = context.getResources().
                 getDrawable(R.drawable.cap_ninja, null); //cap
         drawableObjectiu[1] = context.getResources().
                 getDrawable(R.drawable.cos_ninja, null); //cos
         drawableObjectiu[2] = context.getResources().
                 getDrawable(R.drawable.cua_ninja, null);
-        sharedPreferences = context.getSharedPreferences("ninja_warrior_preference", Context.MODE_PRIVATE);
-
     }
 
 
@@ -156,8 +179,7 @@ public class VistaJoc extends View {
         }
     }
 
-    private float mX=0, mY=0;
-    private boolean llancament = false;
+
     @Override
     public boolean onTouchEvent (MotionEvent event) {
         super.onTouchEvent(event);
@@ -182,7 +204,7 @@ public class VistaJoc extends View {
                 girNinja = 0;
                 acceleracioNinja = 0;
                 if (llancament){
-                    DisparaGanivet();
+                    disparaGanivet();
                 }
                 break;
         }
@@ -245,9 +267,6 @@ public class VistaJoc extends View {
     }
 
     private void destrueixObjectiu(int i) {
-        objectius.remove(i);
-        contador++;
-        ganivetActiu = false;
         int numParts = 3;
         if(objectius.get(i).getDrawable()== drawableEnemic){
             for(int n = 0; n < numParts; n++){
@@ -261,8 +280,11 @@ public class VistaJoc extends View {
                 objectius.add(objectiu);
             }
         }
+        objectius.remove(i);
+        contador++;
+        ganivetActiu = false;
     }
-    private void DisparaGanivet() {
+    private void disparaGanivet() {
         ganivet.setPosX(ninja.getPosX()+ ninja.getAmplada()/2-ganivet.getAmplada()/2);
         ganivet.setPosY(ninja.getPosY()+ ninja.getAltura()/2-ganivet.getAltura()/2);
         ganivet.setAngle(ninja.getAngle());
@@ -275,16 +297,9 @@ public class VistaJoc extends View {
         ganivetActiu = true;
     }
 
-
-
-    public void gameOver(){
-        String nickname = bundle.getString("nickname");
-
-    }
-
-    private void guardarNickname(String nickname){
+    private void guardarNickname(){
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(nickname, 0);
+        editor.putInt(MainActivity.getNickname(), JocActivity.getContador());
         editor.commit();
     }
 }

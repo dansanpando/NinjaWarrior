@@ -6,9 +6,8 @@
         android:title="@string/reproduir_musica" />
     <ListPreference
         android:defaultValue="1"
-        android:dialogTitle="Ninjas"
         android:entries="@array/pais"
-        android:entryValues="@android:array/emailAddressTypes"
+        android:entryValues="@array/pais"
         android:key="ninjaList"
         android:title="Ninja" />
     <EditTextPreference

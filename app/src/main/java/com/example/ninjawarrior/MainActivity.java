@@ -29,16 +29,15 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar menu;
 
-    private String nickname;
+    private Music music;
 
-    private MediaPlayer backgroundMusic;
+    private static String nickname;
+
     private SharedPreferences sharedPreferences;
 
     private static SharedPreferences pref;
 
-
-
-    public static ArrayList<String> listNamePrueba = new ArrayList<>();
+    private ArrayList<String> listNamePrueba = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +49,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
+        music = Music.getInstance();
         btJugar = findViewById(R.id.btJugar);
         btPuntuacio = findViewById(R.id.btPuntuacio);
         btSalir = findViewById(R.id.btSalir);
         menu = findViewById(R.id.toolbar);
         setSupportActionBar(menu);
-        backgroundMusic = MediaPlayer.create(MainActivity.this,R.raw.soundtuck);
         sharedPreferences = getSharedPreferences("ninja_warrior_preference", Context.MODE_PRIVATE);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
     }
@@ -98,23 +97,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void BackgroundMusic() {
-
-        if (backgroundMusic.isPlaying()) {
-            backgroundMusic.stop();
+        music.backgroundMain(this);
+        if (music.getMusic().isPlaying()) {
+            music.getMusic().stop();
             try {
-                backgroundMusic.prepare();
+                music.getMusic().prepare();
             } catch (IOException e) {
                 new RuntimeException();
             }
         }
-        backgroundMusic.start();
+        music.getMusic().start();
     }
 
     private void endProgram(){
         finish();
     }
-
-
 
 
     private ArrayList<String> recogerNickname(){
@@ -136,9 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startGame(){
         getNamePlayer();
-        Intent i = new Intent(this, JocActivity.class);
-        i.putExtra("nickname", nickname);
-        startActivity(i);
+        startActivity( new Intent(this, JocActivity.class));
 
     }
 
@@ -154,4 +149,7 @@ public class MainActivity extends AppCompatActivity {
        return pref.getBoolean("cbMusic",true);
     }
 
+    public static String getNickname() {
+        return nickname;
+    }
 }
